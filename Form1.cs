@@ -26,6 +26,18 @@ namespace WinFormsApp1
 
             ProcessStatusService.Reset();
             AppLogger.Log("Приложение запущено.");
+            try
+            {
+                using (AirLoggerDbContext db = new AirLoggerDbContext())
+                {
+                    var students = db.Students.ToList();
+                    AppLogger.Log($"Загружено студентов из БД AirLogger: {students.Count}");
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLogger.LogException(ex, "AirLoggerDbContext");
+            }
         }
 
         private void AppLogger_LogAdded(string message)
@@ -239,5 +251,6 @@ namespace WinFormsApp1
             ProcessStatusService.StatusChanged -= ProcessStatusService_StatusChanged;
             base.OnFormClosed(e);
         }
+
     }
 }
